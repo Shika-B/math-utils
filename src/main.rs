@@ -3,7 +3,7 @@ mod ring;
 
 use ring::Ring;
 
-fn p1<T: Ring>(x: T) -> T {
+fn p1<'a, T: Ring<'a>>(x: T) -> T {
     x + T::one()
 }
 

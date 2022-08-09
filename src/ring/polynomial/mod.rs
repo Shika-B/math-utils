@@ -7,7 +7,7 @@ pub mod univar_polynomial;
 //TODO Write a generic multivariate polynomial using macros
 pub mod multivar_polynomial;
 
-pub trait Polynomial: Ring {
-    type CoefRing: Ring;
+pub trait Polynomial<'a>: Ring<'a> {
+    type CoefRing: Ring<'a>;
     fn dim(&self) -> usize;
 }
