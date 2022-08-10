@@ -42,6 +42,19 @@ impl<'a, R: Ring<'a>> UPolynomial<'a, R> {
     }
 }
 
+impl<'a, R: Ring<'a>> Ring<'a> for UPolynomial<'a, R> {
+    fn is_commutative(&self) -> bool {
+        true
+    }
+}
+
+impl<'a, R: Ring<'a>> Polynomial<'a> for UPolynomial<'a, R> {
+    type CoefRing = R;
+    fn dim(&self) -> usize {
+        1
+    }
+}
+
 impl<'a, R: Ring<'a>> Add<Self> for UPolynomial<'a, R> {
     type Output = Self;
 
@@ -177,19 +190,6 @@ ref_bin_op!(Mul, mul);
 ref_assign_bin_op!(AddAssign, add_assign, Add::add);
 ref_assign_bin_op!(SubAssign, sub_assign, Sub::sub);
 ref_assign_bin_op!(MulAssign, mul_assign, Mul::mul);
-
-impl<'a, R: Ring<'a>> Ring<'a> for UPolynomial<'a, R> {
-    fn is_commutative(&self) -> bool {
-        true
-    }
-}
-
-impl<'a, R: Ring<'a>> Polynomial<'a> for UPolynomial<'a, R> {
-    type CoefRing = R;
-    fn dim(&self) -> usize {
-        1
-    }
-}
 
 /// TESTS
 #[cfg(test)]

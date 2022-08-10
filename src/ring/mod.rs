@@ -1,3 +1,4 @@
+pub mod arithmetic;
 pub mod mod_int;
 pub mod polynomial;
 
@@ -33,8 +34,8 @@ where
     Self: 'a,
 {
     /// HACK: There are no type methods, so just use `R::zero().is_field()`
-    fn is_field(&self) -> bool {
-        false
+    fn is_field(&self) -> Option<bool> {
+        None
     }
 
     /// HACK: There are no type methods, so just use `R::zero().is_commutative()`
@@ -87,8 +88,8 @@ impl<'a> Ring<'a> for Rational32 {
     fn is_commutative(&self) -> bool {
         true
     }
-    fn is_field(&self) -> bool {
-        true
+    fn is_field(&self) -> Option<bool> {
+        Some(true)
     }
     fn inverse(&self) -> Option<Self> {
         Some(self.inv())
@@ -98,8 +99,8 @@ impl<'a> Ring<'a> for Rational64 {
     fn is_commutative(&self) -> bool {
         true
     }
-    fn is_field(&self) -> bool {
-        true
+    fn is_field(&self) -> Option<bool> {
+        Some(true)
     }
     fn inverse(&self) -> Option<Self> {
         Some(self.inv())
@@ -110,8 +111,8 @@ impl<'a> Ring<'a> for f32 {
     fn is_commutative(&self) -> bool {
         true
     }
-    fn is_field(&self) -> bool {
-        true
+    fn is_field(&self) -> Option<bool> {
+        Some(true)
     }
     fn inverse(&self) -> Option<Self> {
         Some(self.inv())
@@ -121,8 +122,8 @@ impl<'a> Ring<'a> for f64 {
     fn is_commutative(&self) -> bool {
         true
     }
-    fn is_field(&self) -> bool {
-        true
+    fn is_field(&self) -> Option<bool> {
+        Some(true)
     }
     fn inverse(&self) -> Option<Self> {
         Some(self.inv())
@@ -139,8 +140,8 @@ impl<'a> Ring<'a> for BigRational {
     fn is_commutative(&self) -> bool {
         true
     }
-    fn is_field(&self) -> bool {
-        true
+    fn is_field(&self) -> Option<bool> {
+        Some(true)
     }
     fn inverse(&self) -> Option<Self> {
         Some(self.inv())

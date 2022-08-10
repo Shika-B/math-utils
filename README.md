@@ -6,7 +6,7 @@ TODO:
     - [x] `R` (using `f32`, `f64`)
     - [x] `Q` (using `BigRational`, `Rational32` and `Rational64` from the `num_rational` crate)
     - [x] `Z` (using `i8, i16, i32, i64, i128` from the `std` and `BigInt` from the `num_bigint` crate)
-    - [ ] Integers mod `n` (using `i128`)
+    - [x] Integers mod `n` (using `i128`)
     - [ ] Big integer mod `n` (using `num_bigint`)
 - [x] Add an `fn inverse(&self) -> Option<R>` method to the `Ring` trait defaulting to `None`.
 - [ ] Basic modular arithmetic utilities:

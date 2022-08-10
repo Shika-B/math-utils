@@ -2,18 +2,37 @@ use std::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
 use num::{One, Zero};
 
+use crate::ring::Ring;
+
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct ModInt {
     value: i128,
     modulus: i128,
+    is_field: Option<bool>,
 }
 
 impl ModInt {
     pub fn new(value: i128, modulus: i128) -> Self {
-        Self { value, modulus }
+        Self {
+            value,
+            modulus,
+            is_field: None,
+        }
     }
+
+    /// !!! Don't use this method if you don't know for sure `modulus` is prime !!!
+    pub fn new_field(value: i128, modulus: i128) -> Self {
+        Self {
+            value,
+            modulus,
+            is_field: Some(true),
+        }
+    }
+    /// Method only used in the arithemtical operations definition, to work around the fact that the `Zero` and `One` traits
+    /// require universal (that is, not depending on the modulus) `zero` and `one` method.
+    /// The workaround is to set the modulus to `-1` in these method and then check if the modulus is equal
     fn sanitize_mod(&mut self, other: &mut Self) {
-        if (self.modulus == -1) ^ (other.modulus == -1) {
+        if (self.modulus == -1) || (other.modulus == -1) {
             let actual_modulus = self.modulus.max(other.modulus);
             self.modulus = actual_modulus;
             other.modulus = actual_modulus;
@@ -23,14 +42,25 @@ impl ModInt {
     }
 }
 
+impl<'a> Ring<'a> for ModInt {
+    fn is_field(&self) -> Option<bool> {
+        self.is_field
+    }
+
+    fn is_commutative(&self) -> bool {
+        true
+    }
+
+    fn inverse(&self) -> Option<Self> {
+        unimplemented!()
+    }
+}
+
 impl Add<Self> for ModInt {
     type Output = Self;
     fn add(mut self, mut other: Self) -> Self {
         self.sanitize_mod(&mut other);
-        Self {
-            value: self.value + other.value % self.modulus,
-            modulus: self.modulus,
-        }
+        Self::new(self.value + other.value % self.modulus, self.modulus)
     }
 }
 
@@ -38,10 +68,7 @@ impl Sub<Self> for ModInt {
     type Output = Self;
     fn sub(mut self, mut other: Self) -> Self {
         self.sanitize_mod(&mut other);
-        Self {
-            value: self.value - other.value % self.modulus,
-            modulus: self.modulus,
-        }
+        Self::new(self.value - other.value % self.modulus, self.modulus)
     }
 }
 
@@ -49,10 +76,14 @@ impl Mul<Self> for ModInt {
     type Output = Self;
     fn mul(mut self, mut other: Self) -> Self {
         self.sanitize_mod(&mut other);
-        Self {
-            value: self.value * other.value % self.modulus,
-            modulus: self.modulus,
-        }
+        Self::new(self.value * other.value % self.modulus, self.modulus)
+    }
+}
+impl Neg for ModInt {
+    type Output = Self;
+    fn neg(mut self) -> Self {
+        self.value = -1;
+        self
     }
 }
 
@@ -61,13 +92,21 @@ impl Zero for ModInt {
         self.value == 0
     }
     fn zero() -> Self {
-        Self {
-            value: 0,
-            modulus: -1, // Yes this is a hack and I need to keep track of it in every arithmetical operations,
+        Self::new(0, -1) // Yes this is a hack and I need to keep track of it in every arithmetical operations,
                          // but I can't encode the modulus at the type-level anyway so..
-        }
     }
 }
+
+impl One for ModInt {
+    fn is_one(&self) -> bool {
+        self.value == 0
+    }
+    fn one() -> Self {
+        Self::new(1, -1) // Yes this is a hack and I need to keep track of it in every arithmetical operations,
+                         // but I can't encode the modulus at the type-level anyway so..
+    }
+}
+
 impl AddAssign<Self> for ModInt {
     fn add_assign(&mut self, mut other: Self) {
         self.sanitize_mod(&mut other);
