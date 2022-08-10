@@ -1,10 +1,9 @@
 use std::{
-    fmt::Debug,
     marker::PhantomData,
     ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign},
 };
 
-use num::{pow, One, Zero};
+use num::{One, Zero};
 
 use crate::ring::{polynomial::Polynomial, Ring};
 
@@ -16,8 +15,8 @@ pub struct UPolynomial<'a, R: Ring<'a>> {
 }
 
 impl<'a, R: Ring<'a>> UPolynomial<'a, R> {
-    fn new(coefficients: Vec<R>) -> Self {
-        assert!(R::zero().is_commutative());
+    pub fn new(coefficients: Vec<R>) -> Self {
+        debug_assert!(R::zero().is_commutative());
         Self {
             degree: coefficients.len() - 1,
             coefficients,
@@ -25,7 +24,7 @@ impl<'a, R: Ring<'a>> UPolynomial<'a, R> {
         }
     }
 
-    fn scale(mut self, scalar: R) -> Self {
+    pub fn scale(mut self, scalar: R) -> Self {
         for c in self.coefficients.iter_mut() {
             *c = scalar.clone() * c.clone();
         }
@@ -33,7 +32,7 @@ impl<'a, R: Ring<'a>> UPolynomial<'a, R> {
     }
 
     /// Use Horner's method to evaluate a polynomial at a given point
-    fn eval(&self, point: R) -> R {
+    pub fn eval(&self, point: R) -> R {
         let mut s = self.coefficients[self.degree].clone();
         for k in 1..(self.degree + 1) {
             s *= point.clone();

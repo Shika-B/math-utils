@@ -1,3 +1,4 @@
+pub mod mod_int;
 pub mod polynomial;
 
 use std::{
@@ -6,6 +7,8 @@ use std::{
 };
 
 use num::{traits::Inv, BigInt, BigRational, One, Rational32, Rational64, Zero};
+
+pub use num::pow;
 
 pub trait Ring<'a>:
     Add<Output = Self>
