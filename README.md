@@ -16,7 +16,7 @@ TODO:
 
 - [ ] Basic modular arithmetic utilities:
     - [ ] Square roots and more generally `n`-th root, in particular `n`-th roots of unity
-    - [ ] Modular exponentiation (interface for `pow_mod` from `num_bigint`)
+    - [x] Modular exponentiation (interface for `pow_mod` from `num_bigint`)
 
 - [ ] Implement fast polynomial multiplication using Karatsuba's algorithm atleast. 
 
