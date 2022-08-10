@@ -219,6 +219,16 @@ mod test {
     use crate::ring::mod_int::ModInt;
 
     #[test]
+    fn equality() {
+        let x = ModInt::new(2, 29);
+        let y = ModInt::new(-27, 29);
+        let z = ModInt::new(31, 29);
+        assert_eq!(x, y);
+        assert_eq!(y, z);
+        assert_eq!(x, z);
+    }
+
+    #[test]
     fn arithmetic() {
         let (x, y, z) = (ModInt::new(3, 21), ModInt::new(5, 21), ModInt::new(23, 21));
         let expected = ModInt::new(15, 21);
