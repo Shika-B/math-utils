@@ -15,7 +15,10 @@ TODO:
 - [ ] Add a product of rings structure.
 
 - [ ] Basic modular arithmetic utilities:
-    - [ ] Square roots and more generally `n`-th root, in particular `n`-th roots of unity
+    - [ ] Square roots mod prime (Tonelli-Shanks algorithm)
+    - [ ] Square roots mod prime powers (Tonelli-Shanks algorithm, see Dickson's book)
+    - [ ] Square roots mod any composite integers (??)
+    - [ ] More generally`n`-th root, in particular `n`-th roots of unity
     - [x] Modular exponentiation
 
 - [ ] Implement fast polynomial multiplication using Karatsuba's algorithm atleast. 
@@ -26,6 +29,7 @@ TODO:
     - [ ] Inverse 
 
 - [ ] Matrix specific operations:
+    - [ ] Indexing
     - [ ] Transpose
     - [ ] arrange rows/columns  
 
