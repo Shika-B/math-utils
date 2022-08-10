@@ -7,11 +7,20 @@ TODO:
     - [x] `Q` (using `BigRational`, `Rational32` and `Rational64` from the `num_rational` crate)
     - [x] `Z` (using `i8, i16, i32, i64, i128` from the `std` and `BigInt` from the `num_bigint` crate)
     - [ ] Integers mod `n` (using `num_bigint`)
+
+- [ ] Add an `fn inverse(&self) -> Option<R>` method to the `Ring` trait defaulting to `None`.
 - [ ] Basic modular arithmetic utilities:
-    - [ ] Inverses
     - [ ] Square roots and more generally `n`-th root, in particular `n`-th roots of unity
     - [ ] Modular exponentiation (interface for `pow_mod` from `num_bigint`)
-- [ ] Add optional `is_field`, `is_commutative` etc. methods to the `Ring` trait.
-- [ ] Add a product of rings structure, typically to be able to work over `Z^n` or `Q^n`.
+- [ ] Add optionals `is_field`, `is_commutative`, etc. methods to the `Ring` trait.
+- [ ] Add a product of rings structure.
+- [ ] Matrix's `Ring` structure:
+    - [ ] Sum
+    - [ ] Product
+    - [ ] Inverse 
+- [ ] Matrix specific operations:
+    - [ ] Transpose
+    - [ ] arrange rows/columns  
+- [ ] View a matrix as a system and solve it
 - [ ] Modules (vector spaces over rings) traits and implementations.
 - [ ] Implement fast polynomial multiplication using Karatsuba's algorithm atleast. 

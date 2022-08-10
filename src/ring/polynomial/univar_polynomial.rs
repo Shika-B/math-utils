@@ -16,6 +16,13 @@ pub struct UPolynomial<'a, R: Ring<'a>> {
 }
 
 impl<'a, R: Ring<'a>> UPolynomial<'a, R> {
+    fn new(coefficients: Vec<R>) -> Self {
+        Self {
+            degree: coefficients.len() - 1,
+            coefficients,
+            phantom: PhantomData,
+        }
+    }
     fn scale(mut self, scalar: R) -> Self {
         for c in self.coefficients.iter_mut() {
             *c = scalar.clone() * c.clone();
@@ -42,6 +49,7 @@ impl<'a, R: Ring<'a>> Add<Self> for UPolynomial<'a, R> {
             std::mem::swap(&mut self, &mut other);
         }
         for (c1, c2) in self.coefficients.iter_mut().zip(other.coefficients) {
+            println!("c1: {:#?}, c2: {:#?}", c1, c2);
             *c1 = c1.clone() + c2;
         }
         return self;
@@ -52,11 +60,17 @@ impl<'a, R: Ring<'a>> Sub<Self> for UPolynomial<'a, R> {
     type Output = Self;
 
     fn sub(mut self, mut other: Self) -> Self {
-        if self.degree < other.degree {
+        let a = if self.degree < other.degree {
             std::mem::swap(&mut self, &mut other);
-        }
+            -R::one()
+        } else {
+            R::one()
+        };
         for (c1, c2) in self.coefficients.iter_mut().zip(other.coefficients) {
-            *c1 = c1.clone() - c2;
+            *c1 = a.clone() * c1.clone() + (-R::one() * a.clone()) * c2;
+        }
+        for i in (other.degree + 1)..(self.degree + 1) {
+            self.coefficients[i] *= a.clone();
         }
         return self;
     }
@@ -65,14 +79,22 @@ impl<'a, R: Ring<'a>> Sub<Self> for UPolynomial<'a, R> {
 impl<'a, R: Ring<'a>> Mul<Self> for UPolynomial<'a, R> {
     type Output = Self;
 
-    fn mul(mut self, mut other: Self) -> Self {
-        if self.degree < other.degree {
-            std::mem::swap(&mut self, &mut other);
+    fn mul(self, other: Self) -> Self {
+        let mut new_coefs = vec![R::zero(); self.degree + other.degree + 1];
+        for k in 0..(self.degree + other.degree + 1) {
+            for i in 0..(k + 1) {
+                let j = k - i;
+                println!("i:{}, j:{}", i, j);
+                if i <= self.degree && j <= other.degree {
+                    new_coefs[k] += self.coefficients[i].clone() * other.coefficients[j].clone();
+                }
+            }
         }
-        for (c1, c2) in self.coefficients.iter_mut().zip(other.coefficients) {
-            *c1 = c1.clone() * c2;
+        Self {
+            coefficients: new_coefs,
+            degree: self.degree + other.degree,
+            phantom: PhantomData,
         }
-        return self;
     }
 }
 
@@ -119,16 +141,15 @@ impl<'a, R: Ring<'a>> Sub<&'a Self> for UPolynomial<'a, R> {
         self - other
     }
 }
-/*
+
 impl<'a, R: Ring<'a>> Mul<&'a Self> for UPolynomial<'a, R> {
     type Output = Self;
 
-    fn mul(mut self, other: &'a Self) -> Self {
-        let mut other = other.clone();
+    fn mul(self, other: &'a Self) -> Self {
+        let other = other.clone();
         self * other
     }
 }
-*/
 /*
 impl<'a, R: Ring<'a>> Ring<'a> for UPolynomial<'a, R> {}
 
@@ -137,4 +158,35 @@ impl<'a, R: Ring<'a>> Polynomial<'a> for UPolynomial<'a, R> {
     fn dim(&self) -> usize {
         1
     }
-}*/
+}
+*/
+
+/// TESTS
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_add() {
+        let p = UPolynomial::new(vec![2, -3, 5]);
+        let q = UPolynomial::new(vec![4, 9, 4, 3]);
+        let expected = UPolynomial::new(vec![6, 6, 9, 3]);
+        assert_eq!(p + q, expected);
+    }
+
+    #[test]
+    fn test_sub() {
+        let p = UPolynomial::new(vec![2, -3, 5]);
+        let q = UPolynomial::new(vec![4, 9, 4, 3]);
+        let expected = UPolynomial::new(vec![-2, -12, 1, -3]);
+        assert_eq!(p - q, expected);
+    }
+
+    #[test]
+    fn test_mul() {
+        let p = UPolynomial::new(vec![2, -3, 5]);
+        let q = UPolynomial::new(vec![4, 9, 4, 3]);
+        let expected = UPolynomial::new(vec![8, 6, 1, 39, 11, 15]);
+        assert_eq!(p * q, expected);
+    }
+}

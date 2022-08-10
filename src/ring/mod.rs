@@ -2,7 +2,7 @@ pub mod polynomial;
 
 use std::{
     fmt::Debug,
-    ops::{Add, AddAssign, Mul, MulAssign, Sub, SubAssign},
+    ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign},
 };
 
 use num::{BigInt, BigRational, One, Rational32, Rational64, Zero};
@@ -14,8 +14,12 @@ pub trait Ring<'a>:
     + AddAssign<Self>
     + SubAssign<Self>
     + MulAssign<Self>
+    + AddAssign<&'a Self>
+    + SubAssign<&'a Self>
+    + MulAssign<&'a Self>
     + Zero
     + One
+    + Neg<Output = Self>
     + Add<&'a Self>
     + Sub<&'a Self>
     + Mul<&'a Self>
