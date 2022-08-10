@@ -214,9 +214,9 @@ ref_assign_bin_op!(MulAssign, mul_assign);
 */
 
 mod test {
-    use crate::ring::{ringed, Ring, Ringed};
+    use crate::ring::{ringed, Ring};
 
-    use super::ModInt;
+    use crate::ring::mod_int::ModInt;
 
     #[test]
     fn arithmetic() {

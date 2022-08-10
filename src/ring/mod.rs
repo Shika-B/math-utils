@@ -43,13 +43,6 @@ where
     }
 }
 
-pub trait Ringed<'a, R>
-where
-    R: Ring<'a>,
-{
-    fn ringed(self) -> R;
-}
-
 /// Takes an integer `s` and returns the image of the `s` under the unique ring morphism `f: Z -> R`.
 fn ringed<'a, R: Ring<'a>, N: Integer + BitAnd<Output = N> + Shl<Output = N> + Clone>(s: N) -> R {
     // sum fast
