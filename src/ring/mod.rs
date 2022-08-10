@@ -5,7 +5,7 @@ use std::{
     ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign},
 };
 
-use num::{BigInt, BigRational, One, Rational32, Rational64, Zero};
+use num::{traits::Inv, BigInt, BigRational, One, Rational32, Rational64, Zero};
 
 pub trait Ring<'a>:
     Add<Output = Self>
@@ -29,12 +29,16 @@ pub trait Ring<'a>:
 where
     Self: 'a,
 {
+    /// HACK: There are no type methods, so just use `R::zero().is_field()`
     fn is_field(&self) -> bool {
         false
     }
+
+    /// HACK: There are no type methods, so just use `R::zero().is_commutative()`
     fn is_commutative(&self) -> bool {
         false
     }
+
     fn inverse(&self) -> Option<Self> {
         None
     }
@@ -83,6 +87,9 @@ impl<'a> Ring<'a> for Rational32 {
     fn is_field(&self) -> bool {
         true
     }
+    fn inverse(&self) -> Option<Self> {
+        Some(self.inv())
+    }
 }
 impl<'a> Ring<'a> for Rational64 {
     fn is_commutative(&self) -> bool {
@@ -90,6 +97,9 @@ impl<'a> Ring<'a> for Rational64 {
     }
     fn is_field(&self) -> bool {
         true
+    }
+    fn inverse(&self) -> Option<Self> {
+        Some(self.inv())
     }
 }
 
@@ -100,6 +110,9 @@ impl<'a> Ring<'a> for f32 {
     fn is_field(&self) -> bool {
         true
     }
+    fn inverse(&self) -> Option<Self> {
+        Some(self.inv())
+    }
 }
 impl<'a> Ring<'a> for f64 {
     fn is_commutative(&self) -> bool {
@@ -107,6 +120,9 @@ impl<'a> Ring<'a> for f64 {
     }
     fn is_field(&self) -> bool {
         true
+    }
+    fn inverse(&self) -> Option<Self> {
+        Some(self.inv())
     }
 }
 
@@ -122,6 +138,9 @@ impl<'a> Ring<'a> for BigRational {
     }
     fn is_field(&self) -> bool {
         true
+    }
+    fn inverse(&self) -> Option<Self> {
+        Some(self.inv())
     }
 }
 

@@ -17,12 +17,14 @@ pub struct UPolynomial<'a, R: Ring<'a>> {
 
 impl<'a, R: Ring<'a>> UPolynomial<'a, R> {
     fn new(coefficients: Vec<R>) -> Self {
+        assert!(R::zero().is_commutative());
         Self {
             degree: coefficients.len() - 1,
             coefficients,
             phantom: PhantomData,
         }
     }
+
     fn scale(mut self, scalar: R) -> Self {
         for c in self.coefficients.iter_mut() {
             *c = scalar.clone() * c.clone();
@@ -177,7 +179,11 @@ ref_assign_bin_op!(AddAssign, add_assign, Add::add);
 ref_assign_bin_op!(SubAssign, sub_assign, Sub::sub);
 ref_assign_bin_op!(MulAssign, mul_assign, Mul::mul);
 
-impl<'a, R: Ring<'a>> Ring<'a> for UPolynomial<'a, R> {}
+impl<'a, R: Ring<'a>> Ring<'a> for UPolynomial<'a, R> {
+    fn is_commutative(&self) -> bool {
+        true
+    }
+}
 
 impl<'a, R: Ring<'a>> Polynomial<'a> for UPolynomial<'a, R> {
     type CoefRing = R;
