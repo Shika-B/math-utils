@@ -1,4 +1,5 @@
 TODO:
+
 - [x] Basic `Ring` and `Polynomial` traits
 - [ ] Basic Rings:
     - [x] Given a ring `R`, univariate polynomials over `R`, that is `R[X]`
@@ -8,12 +9,17 @@ TODO:
     - [x] `Z` (using `i8, i16, i32, i64, i128` from the `std` and `BigInt` from the `num_bigint` crate)
     - [x] Integers mod `n` (using `i128`)
     - [ ] Big integer mod `n` (using `num_bigint`)
+
 - [x] Add an `fn inverse(&self) -> Option<R>` method to the `Ring` trait defaulting to `None`.
+- [x] Add optionals `is_field`, `is_commutative`, etc. methods to the `Ring` trait.
+- [ ] Add a product of rings structure.
+
 - [ ] Basic modular arithmetic utilities:
     - [ ] Square roots and more generally `n`-th root, in particular `n`-th roots of unity
     - [ ] Modular exponentiation (interface for `pow_mod` from `num_bigint`)
-- [x] Add optionals `is_field`, `is_commutative`, etc. methods to the `Ring` trait.
-- [ ] Add a product of rings structure.
+
+- [ ] Implement fast polynomial multiplication using Karatsuba's algorithm atleast. 
+
 - [ ] Matrix's `Ring` structure:
     - [ ] Sum
     - [ ] Product
@@ -22,5 +28,6 @@ TODO:
     - [ ] Transpose
     - [ ] arrange rows/columns  
 - [ ] View a matrix as a system and solve it
+
 - [ ] Modules (vector spaces over rings) traits and implementations.
-- [ ] Implement fast polynomial multiplication using Karatsuba's algorithm atleast. 
+

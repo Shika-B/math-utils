@@ -2,7 +2,7 @@ use std::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
 use num::{One, Zero};
 
-use crate::ring::Ring;
+use crate::ring::{arithmetic::xgcd, Ring};
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct ModInt {
@@ -28,6 +28,7 @@ impl ModInt {
             is_field: Some(true),
         }
     }
+
     /// Method only used in the arithemtical operations definition, to work around the fact that the `Zero` and `One` traits
     /// require universal (that is, not depending on the modulus) `zero` and `one` method.
     /// The workaround is to set the modulus to `-1` in these method and then check if the modulus is equal
@@ -52,7 +53,13 @@ impl<'a> Ring<'a> for ModInt {
     }
 
     fn inverse(&self) -> Option<Self> {
-        unimplemented!()
+        let (gcd, _, inv) = xgcd(&self.value, &self.modulus);
+
+        if gcd == 1 {
+            return Some(Self::new(inv, self.modulus));
+        } else {
+            return None;
+        }
     }
 }
 
@@ -79,6 +86,7 @@ impl Mul<Self> for ModInt {
         Self::new(self.value * other.value % self.modulus, self.modulus)
     }
 }
+
 impl Neg for ModInt {
     type Output = Self;
     fn neg(mut self) -> Self {
@@ -113,6 +121,7 @@ impl AddAssign<Self> for ModInt {
         self.value += other.value;
     }
 }
+
 impl SubAssign<Self> for ModInt {
     fn sub_assign(&mut self, mut other: Self) {
         self.sanitize_mod(&mut other);
