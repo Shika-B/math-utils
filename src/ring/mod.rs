@@ -1,13 +1,14 @@
 pub mod arithmetic;
 pub mod mod_int;
 pub mod polynomial;
+pub mod primitive;
 
 use std::{
     fmt::Debug,
-    ops::{Add, AddAssign, BitAnd, Mul, MulAssign, Neg, Shl, ShlAssign, Sub, SubAssign},
+    ops::{Add, AddAssign, BitAnd, Mul, MulAssign, Neg, Shl, Sub, SubAssign},
 };
 
-use num::{traits::Inv, BigInt, BigRational, Integer, One, Rational32, Rational64, Zero};
+use num::{Integer, One, Zero};
 
 pub use num::pow;
 
@@ -68,113 +69,3 @@ fn ringed<'a, R: Ring<'a>, N: Integer + BitAnd<Output = N> + Shl<Output = N> + C
     }
     result
 }
-
-impl<'a> Ring<'a> for i8 {
-    fn is_commutative(&self) -> bool {
-        true
-    }
-}
-
-impl<'a> Ring<'a> for i16 {
-    fn is_commutative(&self) -> bool {
-        true
-    }
-}
-
-impl<'a> Ring<'a> for i32 {
-    fn is_commutative(&self) -> bool {
-        true
-    }
-}
-
-impl<'a> Ring<'a> for i64 {
-    fn is_commutative(&self) -> bool {
-        true
-    }
-}
-
-impl<'a> Ring<'a> for i128 {
-    fn is_commutative(&self) -> bool {
-        true
-    }
-}
-
-impl<'a> Ring<'a> for isize {
-    fn is_commutative(&self) -> bool {
-        true
-    }
-}
-
-impl<'a> Ring<'a> for Rational32 {
-    fn is_commutative(&self) -> bool {
-        true
-    }
-    fn is_field(&self) -> Option<bool> {
-        Some(true)
-    }
-    fn inverse(&self) -> Option<Self> {
-        Some(self.inv())
-    }
-}
-impl<'a> Ring<'a> for Rational64 {
-    fn is_commutative(&self) -> bool {
-        true
-    }
-    fn is_field(&self) -> Option<bool> {
-        Some(true)
-    }
-    fn inverse(&self) -> Option<Self> {
-        Some(self.inv())
-    }
-}
-
-impl<'a> Ring<'a> for f32 {
-    fn is_commutative(&self) -> bool {
-        true
-    }
-    fn is_field(&self) -> Option<bool> {
-        Some(true)
-    }
-    fn inverse(&self) -> Option<Self> {
-        Some(self.inv())
-    }
-}
-impl<'a> Ring<'a> for f64 {
-    fn is_commutative(&self) -> bool {
-        true
-    }
-    fn is_field(&self) -> Option<bool> {
-        Some(true)
-    }
-    fn inverse(&self) -> Option<Self> {
-        Some(self.inv())
-    }
-}
-
-impl<'a> Ring<'a> for BigInt {
-    fn is_commutative(&self) -> bool {
-        true
-    }
-}
-
-impl<'a> Ring<'a> for BigRational {
-    fn is_commutative(&self) -> bool {
-        true
-    }
-    fn is_field(&self) -> Option<bool> {
-        Some(true)
-    }
-    fn inverse(&self) -> Option<Self> {
-        Some(self.inv())
-    }
-}
-
-// impl<'a> Ring<'a> for BigUint {}
-/*
-impl<'a> Ring<'a> for u8 {}
-impl<'a> Ring<'a> for u16 {}
-impl<'a> Ring<'a> for u32 {}
-impl<'a> Ring<'a> for u64 {}
-impl<'a> Ring<'a> for u128 {}
-impl<'a> Ring<'a> for usize {}
-*/
