@@ -11,7 +11,7 @@ use crate::ring::{polynomial::Polynomial, Ring};
 pub struct UPolynomial<'a, R: Ring<'a>> {
     pub coefficients: Vec<R>,
     pub degree: usize,
-    phantom: PhantomData<&'a R>,
+    _phantom: PhantomData<&'a R>,
 }
 
 impl<'a, R: Ring<'a>> UPolynomial<'a, R> {
@@ -20,7 +20,7 @@ impl<'a, R: Ring<'a>> UPolynomial<'a, R> {
         Self {
             degree: coefficients.len() - 1,
             coefficients,
-            phantom: PhantomData,
+            _phantom: PhantomData,
         }
     }
 
@@ -107,7 +107,7 @@ impl<'a, R: Ring<'a>> Mul<Self> for UPolynomial<'a, R> {
         Self {
             coefficients: new_coefs,
             degree: self.degree + other.degree,
-            phantom: PhantomData,
+            _phantom: PhantomData,
         }
     }
 }
@@ -141,7 +141,7 @@ impl<'a, R: Ring<'a>> Zero for UPolynomial<'a, R> {
         Self {
             coefficients: vec![R::zero()],
             degree: 0,
-            phantom: PhantomData,
+            _phantom: PhantomData,
         }
     }
     fn is_zero(&self) -> bool {
@@ -154,7 +154,7 @@ impl<'a, R: Ring<'a>> One for UPolynomial<'a, R> {
         Self {
             coefficients: vec![R::one()],
             degree: 0,
-            phantom: PhantomData,
+            _phantom: PhantomData,
         }
     }
     fn is_one(&self) -> bool {

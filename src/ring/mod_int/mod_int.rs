@@ -214,7 +214,7 @@ ref_assign_bin_op!(MulAssign, mul_assign);
 */
 
 mod test {
-    use crate::ring::{ringed, Ring};
+    use crate::ring::Ring;
 
     use crate::ring::mod_int::ModInt;
 
@@ -232,7 +232,7 @@ mod test {
     fn arithmetic() {
         let (x, y, z) = (ModInt::new(3, 21), ModInt::new(5, 21), ModInt::new(23, 21));
         let expected = ModInt::new(15, 21);
-        assert_eq!(x * (y - z) + ringed::<ModInt, _>(3i32) * z, expected);
+        assert_eq!(x * (y - z) + ModInt::new(3, 21) * z, expected);
     }
 
     #[test]

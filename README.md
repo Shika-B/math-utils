@@ -16,7 +16,7 @@ TODO:
 
 - [ ] Basic modular arithmetic utilities:
     - [ ] Square roots and more generally `n`-th root, in particular `n`-th roots of unity
-    - [x] Modular exponentiation (interface for `pow_mod` from `num_bigint`)
+    - [x] Modular exponentiation
 
 - [ ] Implement fast polynomial multiplication using Karatsuba's algorithm atleast. 
 
@@ -24,9 +24,11 @@ TODO:
     - [ ] Sum
     - [ ] Product
     - [ ] Inverse 
+
 - [ ] Matrix specific operations:
     - [ ] Transpose
     - [ ] arrange rows/columns  
+
 - [ ] View a matrix as a system and solve it
 
 - [ ] Modules (vector spaces over rings) traits and implementations.
