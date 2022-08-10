@@ -8,11 +8,11 @@ TODO:
     - [x] `Z` (using `i8, i16, i32, i64, i128` from the `std` and `BigInt` from the `num_bigint` crate)
     - [ ] Integers mod `n` (using `num_bigint`)
 
-- [ ] Add an `fn inverse(&self) -> Option<R>` method to the `Ring` trait defaulting to `None`.
+- [x] Add an `fn inverse(&self) -> Option<R>` method to the `Ring` trait defaulting to `None`.
 - [ ] Basic modular arithmetic utilities:
     - [ ] Square roots and more generally `n`-th root, in particular `n`-th roots of unity
     - [ ] Modular exponentiation (interface for `pow_mod` from `num_bigint`)
-- [ ] Add optionals `is_field`, `is_commutative`, etc. methods to the `Ring` trait.
+- [x] Add optionals `is_field`, `is_commutative`, etc. methods to the `Ring` trait.
 - [ ] Add a product of rings structure.
 - [ ] Matrix's `Ring` structure:
     - [ ] Sum
