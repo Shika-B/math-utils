@@ -1,10 +1,13 @@
-use std::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign};
+use std::{
+    cmp::PartialEq,
+    ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign},
+};
 
 use num::{One, Zero};
 
 use crate::ring::{arithmetic::xgcd, Ring};
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy)]
 pub struct ModInt {
     value: i128,
     modulus: i128,
@@ -29,6 +32,36 @@ impl ModInt {
         }
     }
 
+    pub fn mod_pow(&self, exp: i128) -> Self {
+        if exp < 0 {
+            match self.inverse() {
+                Some(inv) => return inv.mod_pow(-exp),
+                None => {
+                    panic!("Cannot compute negative exponent of a non-inversible modular integer")
+                }
+            }
+        } else if self.modulus == -1 {
+            return *self;
+        }
+        let mut result = 0;
+        let mut mask = 1i128;
+        let mut pow2 = self.value;
+        for _ in 0..127 {
+            if mask > exp {
+                break;
+            }
+            let is_set = (exp & mask) != 0;
+            if is_set {
+                result += pow2;
+                result %= self.modulus
+            }
+            mask <<= 1;
+            pow2 = pow2 * pow2;
+            pow2 %= self.modulus;
+        }
+        Self::new(result, self.modulus)
+    }
+
     /// Method only used in the arithemtical operations definition, to work around the fact that the `Zero` and `One` traits
     /// require universal (that is, not depending on the modulus) `zero` and `one` method.
     /// The workaround is to set the modulus to `-1` in these method and then check if the modulus is equal
@@ -43,6 +76,17 @@ impl ModInt {
     }
 }
 
+impl PartialEq for ModInt {
+    fn eq(&self, other: &Self) -> bool {
+        if (self.modulus == -1) || (other.modulus == -1) {
+            return self.value == other.value;
+        } else {
+            debug_assert_eq!(self.modulus, other.modulus);
+        }
+        (self.value - other.value).rem_euclid(self.modulus) == 0
+    }
+}
+
 impl<'a> Ring<'a> for ModInt {
     fn is_field(&self) -> Option<bool> {
         self.is_field
@@ -53,10 +97,10 @@ impl<'a> Ring<'a> for ModInt {
     }
 
     fn inverse(&self) -> Option<Self> {
-        let (gcd, _, inv) = xgcd(&self.value, &self.modulus);
+        let (gcd, inv, _) = xgcd(&self.value, &self.modulus);
 
         if gcd == 1 {
-            return Some(Self::new(inv, self.modulus));
+            return Some(Self::new(inv.rem_euclid(self.modulus), self.modulus));
         } else {
             return None;
         }
@@ -135,7 +179,7 @@ impl MulAssign<Self> for ModInt {
         self.value *= other.value;
     }
 }
-
+/*
 macro_rules! ref_bin_op {
     ($trait:tt, $method_name:ident) => {
         impl<'a> $trait<&'a Self> for ModInt {
@@ -167,3 +211,34 @@ ref_bin_op!(Mul, mul);
 ref_assign_bin_op!(AddAssign, add_assign);
 ref_assign_bin_op!(SubAssign, sub_assign);
 ref_assign_bin_op!(MulAssign, mul_assign);
+*/
+
+mod test {
+    use crate::ring::{ringed, Ring, Ringed};
+
+    use super::ModInt;
+
+    #[test]
+    fn arithmetic() {
+        let (x, y, z) = (ModInt::new(3, 21), ModInt::new(5, 21), ModInt::new(23, 21));
+        let expected = ModInt::new(15, 21);
+        assert_eq!(x * (y - z) + ringed::<ModInt, _>(3i32) * z, expected);
+    }
+
+    #[test]
+    fn inverse() {
+        let x = ModInt::new(5, 7);
+        assert_eq!(x.inverse(), Some(ModInt::new(3, 7)))
+    }
+
+    #[test]
+    fn mod_pow_test() {
+        let x = ModInt::new(5, 7);
+
+        let expected = ModInt::new(4, 7);
+        assert_eq!(x.mod_pow(2), expected);
+
+        let expected = ModInt::new(2, 7);
+        assert_eq!(x.mod_pow(-2), expected)
+    }
+}
